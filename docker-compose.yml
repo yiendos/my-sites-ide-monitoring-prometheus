@@ -1,0 +1,35 @@
+services:
+    prometheus:
+        image: ${NAMESPACE}_prometheus:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command:
+            # written by monitoring:prometheus-start, with the IDE's network to discover containers on
+            - --config.file=/storage/conf/prometheus.yml
+            # storage/plugins/prometheus/ ("storage": true in composer.json mounts it at /storage)
+            - --storage.tsdb.path=/storage/data
+            - --storage.tsdb.retention.time=${PROMETHEUS_RETENTION:-2d}
+            # Alloy (OTLP metrics) and Tempo's metrics-generator push here
+            - --web.enable-remote-write-receiver
+            # the trace ids on Tempo's span metrics, for Grafana's metric-to-trace links
+            - --enable-feature=exemplar-storage
+        ports:
+            - "${PROMETHEUS_PORT:-9090}:9090"
+        # read-only Docker socket for container discovery - nobody joins the group that owns it
+        # (root under Docker Desktop; monitoring:prometheus-start finds the docker group on Linux)
+        group_add:
+            - "${DOCKER_SOCKET_GID:-0}"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        # Docker's own copy of the container's output, capped (json-file only rotates by size) - the
+        # searchable history is in Loki, for its retention
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "3"
+        networks:
+            - my-sites-ide
+
+    # opt-in: run monitoring:prometheus-start (it writes the config first), or add prometheus to APP

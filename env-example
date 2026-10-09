@@ -1,0 +1,9 @@
+# [prometheus]
+# Defaults live in this plugin's .env. PROMETHEUS_PORT is the host port for the Prometheus UI
+# (http://localhost:9090) - inside the IDE it's always prometheus:9090. PROMETHEUS_RETENTION is
+# how long metrics are kept (e.g. 2d, 12h). DOCKER_SOCKET_GID is the group that owns the Docker
+# socket, found for you - set it only if container discovery fails with permission denied.
+# Run `php my-sites-ide monitoring:prometheus-start` after changing any of them.
+#PROMETHEUS_PORT=9090
+#PROMETHEUS_RETENTION=2d
+#DOCKER_SOCKET_GID=0

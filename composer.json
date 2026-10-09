@@ -1,6 +1,6 @@
 {
     "name": "yiendos/my-sites-ide-monitoring-prometheus",
-    "description": "Prometheus metrics for my-sites-ide - scrapes any IDE container labelled prometheus.io/scrape, and takes remote writes from Alloy and Tempo",
+    "description": "Prometheus metrics for my-sites-ide - scrapes any IDE container labelled prometheus.io/scrape, and takes remote writes from Alloy (OTLP and every container's CPU/memory) and Tempo",
     "type": "my-sites-ide-plugin",
     "license": "MIT",
     "keywords": ["my-sites-ide", "prometheus", "metrics", "monitoring", "observability"],
